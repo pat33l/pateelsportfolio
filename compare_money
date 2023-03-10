@@ -1,0 +1,71 @@
+#include<iostream>
+using namespace std;
+class Money {
+public:
+      Money();
+      Money(int dollars, int cents);
+    void setDollars(int);
+      void setCents(int);
+    int getDollars();
+      int getCents();
+    friend Money add(Money amount1, Money amount2);
+    friend bool equal(Money amount1, Money amount2);
+    double get_value();  // if 12 dollars and 40 cents, this return $12.40
+private:
+      int dollars;
+      int cents;
+ };
+Money::Money() {};
+Money::Money(int dollars, int cents)
+{
+dollars = 0;
+cents = 0; }
+void Money::setDollars(int td) { dollars = td; }
+void Money::setCents(int tc) { cents = tc; }
+int Money::getDollars() { return dollars;}
+int Money::getCents() { return cents; }
+Money add(Money amount1, Money amount2) {
+      Money total;
+      int dollars = amount1.dollars + amount2.dollars;
+      int cents = amount1.cents + amount2.cents;
+      total.setDollars(dollars);
+      total.setCents(cents);
+      return total;
+}
+bool equal(Money amount1, Money amount2) {
+      if (amount1.getDollars() == amount2.getDollars()
+            && amount1.getCents() == amount2.getCents())
+            return true;
+      else
+            return false;
+}
+double get_value(int dollars, int cents) {
+      double total = dollars + (cents * 0.01);
+      return total;
+}
+int main() {
+      int dollars, cents;
+
+cout << "Enter the amount of your money (in dollars, then cents) : ";
+      cin >> dollars >> cents;
+      Money yourMoney(dollars, cents);
+      yourMoney.setDollars(dollars);
+      yourMoney.setCents(cents);
+      cout << "Enter the amount of my money (in dollars, then cents) : ";
+      cin >> dollars >> cents;
+      Money myMoney(dollars, cents);
+      myMoney.setDollars(dollars);
+      myMoney.setCents(cents);
+      cout << "\nYour amount is $" << get_value(yourMoney.getDollars(),
+yourMoney.getCents());
+      cout << "\nMy amount is $"  << get_value(myMoney.getDollars(),
+myMoney.getCents());
+      int check = equal(yourMoney, myMoney);
+    if (check == true)
+            cout << "\nWe have the same amount of money." << endl;
+      else
+            cout << "\nOne of us is richer" << endl;
+      Money total = add(yourMoney, myMoney);
+      cout << "\nOur combined amount is $" << get_value(total.getDollars(),
+total.getCents());
+}
