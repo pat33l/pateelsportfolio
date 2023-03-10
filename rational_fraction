@@ -1,0 +1,152 @@
+problem1.cpp (using .cpp because of mac)
+ #include <iostream>
+ using namespace std;
+ class Rational
+ {
+ public:
+     Rational();
+     Rational(int, int);
+     friend Rational operator+(const Rational&, const Rational&);
+     friend Rational operator-(const Rational&, const Rational&);
+     friend Rational operator*(const Rational&, const Rational&);
+     friend Rational operator/(const Rational&, const Rational&);
+     friend bool operator==(const Rational&, const Rational&);
+     friend bool operator<(const Rational&, const Rational&);
+     friend bool operator<=(const Rational&, const Rational&);
+     friend bool operator>(const Rational&, const Rational&);
+     friend bool operator>=(const Rational&, const Rational&);
+     friend istream& operator >>(istream&, Rational&);
+     friend ostream& operator<<(ostream&, const Rational&);
+ private:
+     int numerator;
+     int denominator;
+     void simplify(); // make 2/4 --> 1/2
+};
+ problem1_1.cpp
+ #include "problem1.cpp"
+ using namespace std;
+ Rational::Rational() : numerator(0), denominator(1) {}
+ Rational::Rational(int num, int denom) : numerator(num), denominator(denom)
+ {
+ simplify();
+ }
+ int gcd(int a, int b) {
+    while (b != 0) {
+    int temp = a % b;
+    a = b;
+b = temp;
+    }
+return abs(a);
+}
+void Rational::simplify() {
+    int gcd_result = gcd(numerator, denominator);
+    numerator = numerator / gcd_result;
+    denominator = denominator / gcd_result;
+}
+Rational operator+(const Rational& r1, const Rational& r2){
+    Rational total;
+    total.numerator = r1.numerator * r2.denominator + r1.denominator *
+r2.numerator;
+    total.denominator = r1.denominator * r2.denominator;
+    total.simplify();
+    return total;
+}
+Rational operator-(const Rational& r1, const Rational& r2){
+    Rational total;
+    total.numerator = r1.numerator * r2.denominator - r1.denominator *
+r2.numerator;
+    total.denominator = r1.denominator * r2.denominator;
+    total.simplify();
+    return total;
+}
+Rational operator*(const Rational& r1, const Rational& r2){
+    Rational total;
+    total.numerator = r1.numerator * r2.numerator;
+    total.denominator = r1.denominator * r2.denominator;
+    total.simplify();
+    return total;
+}
+Rational operator/(const Rational& r1, const Rational& r2){
+
+     Rational total;
+    total.numerator = r1.numerator * r2.denominator;
+    total.denominator = r1.denominator * r2.numerator;
+    total.simplify();
+    return total;
+}
+bool operator==(const Rational& r1, const Rational& r2){
+    if(r1.numerator == r2.numerator && r1.denominator == r2.denominator)
+        return true;
+    else
+        return false;
+}
+bool operator<(const Rational& r1, const Rational& r2){
+    Rational total1, total2;
+    total1.numerator = r1.numerator * r2.denominator;
+    total2.numerator = r2.numerator * r1.denominator;
+    if(total1.numerator < total2.numerator )
+        return true;
+    else
+        return false;
+}
+bool operator<=(const Rational& r1, const Rational& r2){
+    Rational total1, total2;
+    total1.numerator = r1.numerator * r2.denominator;
+    total2.numerator = r2.numerator * r1.denominator;
+    if(total1.numerator <= total2.numerator )
+        return true;
+    else
+        return false;
+}
+bool operator>(const Rational& r1, const Rational& r2){
+    Rational total1, total2;
+    total1.numerator = r1.numerator * r2.denominator;
+    total2.numerator = r2.numerator * r1.denominator;
+    if(total1.numerator > total2.numerator )
+        return true;
+    else
+}
+return false;
+
+ bool operator>=(const Rational& r1, const Rational& r2){
+    Rational total1, total2;
+    total1.numerator = r1.numerator * r2.denominator;
+    total2.numerator = r2.numerator * r1.denominator;
+    if(total1.numerator >= total2.numerator )
+        return true;
+    else
+        return false;
+}
+istream& operator >>(istream& ins, Rational& p){
+   char temp;
+    ins >> p.numerator >> temp >> p.denominator;
+return ins; }
+ostream& operator<<(ostream& os, const Rational& p){
+    os << p.numerator << "/" << p.denominator << endl;
+    return os;
+}
+problem1_main.cpp
+#include "problem1_1.cpp"
+using namespace std;
+int main() {
+    Rational r1, r2;
+    cout << "Enter the first fraction (e.g. 3/4) : ";
+    cin >>r1;
+    cout << "Enter the second fraction (e.g 3/4) : ";
+    cin >> r2;
+    cout << endl;
+    cout << "r1 : " << r1 << endl;
+    cout << "r2 : " << r2 << endl;
+    cout << endl;
+    cout << "r1 + r2 = " << operator+(r1, r2) << endl;
+
+cout << "r1 - r2 = " << operator-(r1, r2) << endl;
+    cout << "r1 * r2 = " << operator*(r1, r2) << endl;
+    cout << "r1 / r2 = " << operator/(r1, r2) << endl;
+cout << endl;
+    cout << "r1 == r2 -> " << operator==(r1, r2) << endl;
+    cout << "r1 < r2  -> " << operator<(r1, r2) << endl;
+    cout << "r1 <= r2 -> " << operator<=(r1, r2) << endl;
+    cout << "r1 > r2  -> " << operator>(r1, r2) << endl;
+    cout << "r1 >= r2 -> " << operator>=(r1, r2) << endl;
+return 0; }
