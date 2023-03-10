@@ -1,0 +1,111 @@
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+class DayOfYear
+{
+public:
+      DayOfYear();  //Initializes the date to January first.
+      DayOfYear(int tmonth, int tday);
+      ~DayOfYear();
+    void setMonth(int tmonth);
+      void setDay(int tday);
+    int getMonth();
+      int getDay();
+    friend bool equal(DayOfYear date1, DayOfYear date2);
+private:
+int month;
+int day; };
+DayOfYear::DayOfYear()
+{
+month = 1;
+day = 1; }
+DayOfYear::DayOfYear(int tmonth, int tday)
+{
+      month = tmonth;
+day = tday; }
+DayOfYear::~DayOfYear() {};
+void DayOfYear::setMonth(int tmonth) { month = tmonth; }
+void DayOfYear::setDay(int tday) { day = tday; }
+ int DayOfYear::getMonth() { return month; }
+int DayOfYear::getDay() { return day; }
+bool equal(DayOfYear date, DayOfYear bday)
+{
+      if (date.getDay() == bday.getDay() && date.getMonth() ==
+bday.getMonth())
+            return true;
+      else
+            return false;
+}
+bool validate(int month, int day) {
+      switch (month) {
+      case 1:
+      case 3:
+      case 5:
+      case 8:
+      case 10:
+      case 12:
+            if (day > 1 && day < 31) {
+                  return true;
+break; }
+            else {
+                  cout << "Invalid Input";
+                  return false;
+                  break;
+} case 2:
+            if (day > 1 && day < 28) {
+                  return true;
+break; }
+            else {
+                  cout << "Invalid Input";
+                  return false;
+                  break;
+            }
+      case 4:
+      case 6:
+
+ } }
+int main() {
+case 7:
+case 9:
+case 11:
+      if (day > 1 && day < 30) {
+            return true;
+break; }
+      else {
+            cout << "Invalid Input";
+            return false;
+            break;
+} default:
+cout << "Invalid Input";
+return false;
+break;
+int day, month;
+bool valid = false;
+do {
+      cout << "\nEnter today's month and day : ";
+      cin >> month >> day;
+      valid =validate(month, day);
+} while (valid == false);
+DayOfYear date(month, day);
+date.setDay(day);
+date.setMonth(month);
+valid = true;
+do {
+      cout << "\nEnter your birthday (month and day) : ";
+      cin >> month >> day;
+      valid = validate(month, day);
+} while (valid == false);
+DayOfYear bday(month, day);
+
+bday.setDay(day);
+      bday.setMonth(month);
+      system("CLS");
+      cout << "\nToday is " << date.getMonth() << "/" << date.getDay();
+      cout << "\nYour birthday is " << bday.getMonth() << "/" <<
+bday.getDay() << endl;
+      int check = equal(date, bday);
+      if (check == true)
+            cout << "\nHappy Birthday to you!!" << endl;
+      else
+            cout << "\nHappy Unbirthday to you!!" << endl;
+return 0; }
