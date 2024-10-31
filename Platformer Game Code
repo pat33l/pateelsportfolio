@@ -1,0 +1,110 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using System;
+
+public class _2DCharacterMovement : MonoBehaviour
+{
+    public Rigidbody2D rb2d;
+
+    [SerializeField] private float _speed = 9f;
+    [SerializeField] private float _jumpForce = 100f;
+    [SerializeField] private Animator animator;
+    private bool canJump = true;
+    [SerializeField] SpriteRenderer sprite;
+    [SerializeField] AudioSource jumpSFX;
+    [SerializeField] AudioSource coinSFX;
+
+    [SerializeField] TextMeshProUGUI coinText;
+    private int coinCounter = 0;
+
+    private Transform myOriginalParent;
+    private Transform currentPlatform;
+    private Vector3 lastSpawnPoint;
+    private void Start()
+    {
+        coinText.text = "Coin: " + coinCounter.ToString();
+        myOriginalParent = transform.parent;
+        lastSpawnPoint = transform.position;
+    }
+    void Update()
+    {
+        float horizontalF = Input.GetAxis("Horizontal");
+        Vector2 movement = Vector2.right * horizontalF;
+        Vector2 hMove = movement * _speed;
+        rb2d.velocity = new Vector2(hMove.x, rb2d.velocity.y);
+        if (horizontalF > 0)
+        {
+            sprite.flipX = false;
+        }
+        if (horizontalF < 0)
+        {
+            sprite.flipX = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Space) == true && canJump)
+        {
+            if(jumpSFX!=null)
+            jumpSFX.Play();
+            rb2d.AddForce(Vector2.up * _jumpForce);
+            transform.parent = myOriginalParent;
+        }
+        if (rb2d.velocity == Vector2.zero)
+        {
+            animator.SetTrigger("Idle");
+        }
+        else if (canJump == true)
+        {
+            animator.SetTrigger("Run");
+        }
+        if (canJump == false)
+        {
+            animator.SetTrigger("Jump");
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Floor")
+        {
+            canJump = false;
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "coin")
+        {
+            //Collect coin
+            CoinCollected(collision.gameObject);
+        }
+        if (collision.gameObject.tag == "Respawn")
+        {
+            lastSpawnPoint = collision.transform.position;
+        }
+        if (collision.gameObject.tag == "Death")
+        {
+            PlayerDied();
+        }
+    }
+    private void PlayerDied()
+    {
+        transform.position = lastSpawnPoint;
+    }
+    private void CoinCollected(GameObject currentCoin)
+    {
+        currentCoin.SetActive(false);
+        coinCounter = coinCounter + 1;
+        coinText.text = "Coin: " + coinCounter.ToString();
+        if (coinSFX != null)
+            coinSFX.Play();
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Floor")
+        {
+            canJump = true;
+            currentPlatform = collision.transform;
+            transform.parent = currentPlatform;
+        }
+    }
+
+}
